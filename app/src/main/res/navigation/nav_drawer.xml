@@ -27,5 +27,14 @@
         android:id="@+id/restaurantsListFragment"
         android:name="com.example.restaurantesfirst.RestaurantsListFragment"
         android:label="fragment_restaurants_list"
-        tools:layout="@layout/fragment_restaurants_list" />
+        tools:layout="@layout/fragment_restaurants_list" >
+        <action
+            android:id="@+id/action_restaurantsListFragment_to_restaurantDetailFragment"
+            app:destination="@id/restaurantDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/restaurantDetailFragment"
+        android:name="com.example.restaurantesfirst.RestaurantDetailFragment"
+        android:label="fragment_restaurant_detail"
+        tools:layout="@layout/fragment_restaurant_detail" />
 </navigation>
