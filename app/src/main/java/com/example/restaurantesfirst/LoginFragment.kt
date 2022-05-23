@@ -1,59 +1,65 @@
 package com.example.restaurantesfirst
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.Navigation
+import com.example.restaurantesfirst.databinding.FragmentLoginBinding
+import com.example.restaurantesfirst.databinding.FragmentRegisterBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        // Inflate the layout for this fragment
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        binding.singInButton.setOnClickListener {
+            checkForValidUsers()
+        }
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun checkForValidUsers() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request: Response<ValidUsers> = RetrofitProvider.getRetrofit().create(APIService::class.java).getUsers("usersRegistered")
+            val users: ValidUsers? = request.body()
+            activity?.runOnUiThread {
+                if (request.isSuccessful && users != null) {
+                    validateUserFields(binding, users)
+                } else {
+                    showNetworkingError()
                 }
             }
+        }
     }
+
+    private fun validateUserFields(bindingPass: FragmentLoginBinding, validUsers: ValidUsers) {
+        val userString: String = bindingPass.mailTextViewLogin.text.toString()
+        val passwordString: String = bindingPass.passwordTextViewLogin.text.toString()
+        for (user in validUsers.users) {
+            if (user.mail == userString && user.password == passwordString) {
+                Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_restaurantsListFragment)
+            } else {
+                Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showNetworkingError() {
+        Toast.makeText(context, "Couldn't fetch the restaurants", Toast.LENGTH_SHORT).show()
+    }
+
 }

@@ -18,5 +18,14 @@
         android:id="@+id/loginFragment"
         android:name="com.example.restaurantesfirst.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_restaurantsListFragment"
+            app:destination="@id/restaurantsListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/restaurantsListFragment"
+        android:name="com.example.restaurantesfirst.RestaurantsListFragment"
+        android:label="fragment_restaurants_list"
+        tools:layout="@layout/fragment_restaurants_list" />
 </navigation>
