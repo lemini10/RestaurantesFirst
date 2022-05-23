@@ -36,13 +36,12 @@ class RestaurantDetailFragment() : Fragment() {
         Picasso.get().load(image1).fit().centerInside().into(binding.firstimageView)
         Picasso.get().load(image2).fit().centerInside().into(binding.imageView2)
         Picasso.get().load(image3).fit().centerInside().into(binding.imageView3)
-        binding.nameTextViewDetail.text = name ?: ""
-        binding.adressTextViewDetail.text = address ?: ""
-        binding.reviewTextViewDetail.text = review ?: ""
-        binding.foundationTextViewDetail.text = foundationYear ?: ""
-        binding.averageTextViewDetail.text = averagePrice ?: ""
-        binding.scoreTextViewDetail.text = score ?: ""
-
+        binding.nameTextViewDetail.text = "Name:" + name ?: ""
+        binding.adressTextViewDetail.text = "Adress:" + address ?: ""
+        binding.reviewTextViewDetail.text = "Review:" + review ?: ""
+        binding.foundationTextViewDetail.text = "Foundation Year:" + foundationYear ?: ""
+        binding.averageTextViewDetail.text = "Average Price:" + averagePrice + " USD"
+        binding.scoreTextViewDetail.text = "Rating:" + score ?: ""
         return root
     }
 }
